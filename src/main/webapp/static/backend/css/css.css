@@ -1,0 +1,45 @@
+@charset "utf-8";
+body, button, input, select, textarea {
+    font-family: tahoma, Arial, "Microsoft YaHei", SimSun;
+    font-size: 14px;
+    line-height: 1.5em;
+    color: #222
+}
+
+.datagrid-header-row {
+    text-align: center;
+    font-weight: bold;
+}
+
+#article_datagrid {
+    margin: 20px;
+}
+
+#article_add_window > h3 {
+    text-align: center;
+}
+
+.article_body_box {
+    width: 90%;
+    margin: 0 auto;
+}
+
+fieldset {
+    background: #e5e5e5;
+}
+
+fieldset tr{
+    line-height: 30px;
+}
+
+fieldset th {
+    font-size: 14px;
+    min-width: 100px;
+    text-align: right;
+}
+fieldset input{
+    width: 200px;
+}
+fieldset input[type=checkbox]{
+    width: auto;
+}

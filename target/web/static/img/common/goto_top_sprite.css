@@ -1,0 +1,6 @@
+.goto_top_sprite{ background:url("goto_top_sprite.png") top left no-repeat; }
+.resume_on{ width:52px; height:52px; background-position:-10px -10px; }
+.resume_off{ width:52px; height:52px; background-position:-10px -72px; }
+.weixin_off{ width:52px; height:52px; background-position:-10px -134px; }
+.weixin_on{ width:52px; height:52px; background-position:-10px -196px; }
+

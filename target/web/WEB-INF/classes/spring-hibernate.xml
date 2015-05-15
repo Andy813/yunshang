@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context ="http://www.springframework.org/schema/context"
+       xmlns:tx ="http://www.springframework.org/schema/tx"
+       xmlns:aop ="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+                            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
+
+       <!--import config file-->
+       <context:property-placeholder file-encoding="utf-8" location="classpath*:db.properties" />
+
+       <!--connection data source config-->
+       <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close"
+             p:url="${jdbc_url}" p:username="${jdbc_user}"  p:password="${jdbc_pwd}"
+             p:initialSize="${druid_initialSize}" p:minIdle="${druid_minIdle}" p:maxActive="${druid_maxActive}" p:maxWait="${druid_maxWait}"
+             p:timeBetweenEvictionRunsMillis="${druid_timeBetweenEvictionRunsMillis}" p:minEvictableIdleTimeMillis="${druid_minEvictableIdleTimeMillis}"
+             p:validationQuery="${druid_validationQuery}"
+             p:testWhileIdle="${druid_testWhileIdle}" p:testOnBorrow="${druid_testOnBorrow}" p:testOnReturn="${druid_testOnReturn}"
+             p:poolPreparedStatements="${druid_poolPreparedStatements}"
+             p:maxPoolPreparedStatementPerConnectionSize="${druid_maxPoolPreparedStatementPerConnectionSize}" p:filters="${druid_filters}" />
+
+       <!--hibernate sessionFactory-->
+       <bean  id="sessionFactory"  class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
+              p:dataSource-ref="dataSource" >
+              <property name="hibernateProperties">
+                     <props>
+                            <prop key="hibernate.dialect">${hibernate_dialect}</prop>
+                            <prop key="hibernate.hbm2ddl.auto">${hibernate_hbm2ddl_auto}</prop>
+                            <!--<prop key="hibernate.current_session_context_class">${hibernate_current_session_context_class}</prop>-->
+                            <prop key="hibernate.show_sql">${hibernate_show_sql}</prop>
+                            <prop key="hibernate.format_sql">${hibernate_format_sql}</prop>
+                     </props>
+              </property>
+              <property name="packagesToScan">
+                     <list>
+                            <value>com.yunshangchinapd.web.model</value>
+                     </list>
+              </property>
+       </bean>
+
+       <!--事务管理器-->
+       <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager"
+             p:dataSource-ref="dataSource"  p:sessionFactory-ref="sessionFactory" />
+
+       <tx:advice id="txAdvice" transaction-manager="transactionManager" >
+              <tx:attributes>
+                     <tx:method name="create*" />
+                     <tx:method name="save*" />
+                     <tx:method name="update*" />
+                     <tx:method name="insert*" />
+                     <tx:method name="modify*"  />
+                     <tx:method name="delete*" />
+                     <tx:method name="remove*"  />
+
+                     <tx:method name="find*"  />
+                     <tx:method name="get*" />
+                     <tx:method name="count*" />
+                     <tx:method name="select*" propagation="SUPPORTS" />
+                     <tx:method name="*" propagation="SUPPORTS" read-only="true" />
+              </tx:attributes>
+       </tx:advice>
+
+       <aop:config proxy-target-class="true">
+              <aop:advisor advice-ref="txAdvice" pointcut="execution(* com.yunshangchinapd.web.service.*.*(..))" />
+       </aop:config>
+
+
+</beans>
